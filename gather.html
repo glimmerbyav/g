@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gather — Where Local Businesses Gather</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF7F2;
+    --card:#FFFFFF;
+    --primary:#C76A4A;
+    --primary-dark:#B15738;
+    --secondary:#93A38C;
+    --accent:#D7B267;
+    --text:#2D2D2D;
+    --text-soft:#6B6560;
+    --success:#7FA67A;
+    --border:#EDE6DA;
+    --shadow: 0 2px 6px rgba(45,45,45,0.05), 0 8px 24px rgba(45,45,45,0.06);
+    --shadow-hover: 0 6px 16px rgba(199,106,74,0.12), 0 14px 32px rgba(45,45,45,0.09);
+    --radius: 20px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Nunito Sans', sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Nunito Sans', sans-serif; font-weight:800; letter-spacing:-0.01em; margin:0;}
+  .script{font-family:'Caveat', cursive;}
+  a{text-decoration:none; color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+  img{display:block;}
+  ::selection{background:var(--accent); color:#2D2D2D;}
+  :focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:6px;}
+
+  /* ---------- layout shell ---------- */
+  .app{min-height:100vh; display:flex; flex-direction:column;}
+  .container{max-width:1180px; margin:0 auto; padding:0 28px;}
+
+  /* ---------- nav ---------- */
+  .navbar{
+    position:sticky; top:0; z-index:100;
+    background:rgba(250,247,242,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto; padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-size:22px; font-weight:800;}
+  .brand-mark{
+    width:38px; height:38px; border-radius:12px;
+    background:linear-gradient(135deg, var(--primary), var(--accent));
+    display:flex; align-items:center; justify-content:center;
+    font-size:19px;
+  }
+  .nav-links{display:flex; align-items:center; gap:4px; flex-wrap:wrap;}
+  .nav-link{
+    display:flex; align-items:center; gap:7px;
+    padding:10px 15px; border-radius:999px; font-weight:700; font-size:14.5px;
+    color:var(--text-soft); border:none; background:transparent; transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .nav-link:hover{background:#F1EAE0; color:var(--text);}
+  .nav-link.active{background:var(--primary); color:#fff;}
+  .nav-right{display:flex; align-items:center; gap:10px;}
+  .avatar-btn{
+    width:40px; height:40px; border-radius:50%; border:2px solid var(--border);
+    background:linear-gradient(135deg,#E8B896,#C76A4A); color:#fff; font-weight:800;
+    display:flex; align-items:center; justify-content:center; font-size:15px;
+  }
+  .mobile-toggle{display:none;}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:14px 26px; border-radius:999px; font-weight:800; font-size:15.5px;
+    border:none; transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--primary); color:#fff; box-shadow:0 6px 18px rgba(199,106,74,0.30);}
+  .btn-primary:hover{background:var(--primary-dark); box-shadow:0 8px 22px rgba(199,106,74,0.38);}
+  .btn-secondary{background:#fff; color:var(--text); border:2px solid var(--border);}
+  .btn-secondary:hover{border-color:var(--secondary); background:#F6F3EC;}
+  .btn-sm{padding:9px 18px; font-size:13.5px;}
+  .btn-block{width:100%;}
+  .btn-ghost{background:transparent; color:var(--primary); font-weight:800;}
+
+  /* ---------- sections/views ---------- */
+  .view{display:none; animation:fadeIn .35s ease;}
+  .view.active{display:block;}
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  section{padding:64px 0;}
+  .section-tight{padding:36px 0;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px; color:var(--primary); font-weight:800;
+    font-size:13px; letter-spacing:.06em; text-transform:uppercase; margin-bottom:14px;
+  }
+  .eyebrow::before{content:'✦';}
+  .section-head{max-width:640px; margin-bottom:34px;}
+  .section-head h2{font-size:34px; margin-bottom:10px;}
+  .section-head p{color:var(--text-soft); font-size:16.5px; line-height:1.55;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; padding:70px 0 40px; overflow:hidden;
+  }
+  .hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:50px; align-items:center;}
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border);
+    padding:8px 16px; border-radius:999px; font-size:13.5px; font-weight:700; color:var(--secondary);
+    box-shadow:var(--shadow); margin-bottom:22px;
+  }
+  .hero h1{font-size:52px; line-height:1.08; margin-bottom:20px;}
+  .hero h1 .script{color:var(--primary); font-weight:700; font-size:1.15em; display:inline-block; transform:rotate(-2deg);}
+  .hero p{font-size:18px; color:var(--text-soft); line-height:1.6; max-width:490px; margin-bottom:30px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:34px;}
+  .hero-trust{display:flex; gap:26px; flex-wrap:wrap;}
+  .hero-trust div{font-size:13.5px; color:var(--text-soft); font-weight:600;}
+  .hero-trust b{display:block; font-size:20px; color:var(--text); font-weight:800;}
+
+  .hero-visual{position:relative; height:460px;}
+  .stall{
+    position:absolute; border-radius:18px; box-shadow:var(--shadow); overflow:hidden;
+    border:6px solid #fff;
+  }
+  .stall img,.stall .ph{width:100%; height:100%; object-fit:cover; display:block;}
+  .stall-1{width:280px; height:230px; top:0; right:40px; transform:rotate(3deg); z-index:3;}
+  .stall-2{width:220px; height:180px; top:150px; left:0; transform:rotate(-4deg); z-index:2;}
+  .stall-3{width:200px; height:170px; bottom:0; right:100px; transform:rotate(-3deg); z-index:1;}
+  .float-chip{
+    position:absolute; background:#fff; border-radius:16px; padding:12px 16px; box-shadow:var(--shadow-hover);
+    display:flex; align-items:center; gap:10px; font-weight:700; font-size:13.5px; z-index:5;
+  }
+  .chip-1{top:210px; left:210px;}
+  .chip-2{bottom:40px; left:60px;}
+  .ph{background:linear-gradient(135deg,var(--secondary),var(--accent)); display:flex; align-items:center; justify-content:center; font-size:44px;}
+  .ph.terr{background:linear-gradient(135deg,var(--primary),#E3A788);}
+  .ph.mustard{background:linear-gradient(135deg,var(--accent),#EFD9A6);}
+  .ph.sage{background:linear-gradient(135deg,var(--secondary),#C3D0BC);}
+
+  /* ---------- stat bar ---------- */
+  .stats-bar{
+    background:#fff; border:1px solid var(--border); border-radius:24px; padding:36px 20px;
+    display:grid; grid-template-columns:repeat(3,1fr); text-align:center; box-shadow:var(--shadow);
+    margin:20px 0 10px;
+  }
+  .stats-bar div b{display:block; font-size:36px; color:var(--primary); font-weight:800;}
+  .stats-bar div span{color:var(--text-soft); font-weight:700; font-size:14px;}
+
+  /* ---------- cards ---------- */
+  .grid{display:grid; gap:26px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+
+  .card{
+    background:var(--card); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+    border:1px solid var(--border); transition:transform .2s ease, box-shadow .2s ease; cursor:pointer;
+  }
+  .card:hover{transform:translateY(-6px); box-shadow:var(--shadow-hover);}
+  .card-img{height:170px; position:relative;}
+  .badge{
+    position:absolute; top:12px; left:12px; background:#fff; padding:5px 12px; border-radius:999px;
+    font-size:12px; font-weight:800; color:var(--primary); box-shadow:var(--shadow);
+  }
+  .badge.tag{
+    background:#fff; border:1.5px dashed var(--accent); color:#8A6C2D;
+  }
+  .fav-btn{
+    position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.92);
+    border:none; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:var(--shadow);
+  }
+  .card-body{padding:18px 18px 20px;}
+  .card-body h3{font-size:17.5px; margin-bottom:6px;}
+  .card-meta{display:flex; align-items:center; gap:6px; color:var(--text-soft); font-size:13.5px; margin-bottom:4px;}
+  .card-stats{display:flex; gap:14px; margin:12px 0 14px; flex-wrap:wrap;}
+  .card-stats span{font-size:12.5px; color:var(--text-soft); font-weight:700; display:flex; align-items:center; gap:4px;}
+  .rating{color:var(--accent); font-weight:800;}
+  .card-foot{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .fee-pill{font-weight:800; color:var(--text); font-size:14px;}
+
+  /* ---------- market tag (signature element) ---------- */
+  .market-tag{
+    position:relative; display:inline-flex; align-items:center; gap:6px;
+    background:#FFF8EC; border:1.5px dashed var(--accent); border-radius:10px;
+    padding:5px 12px 5px 16px; font-weight:800; font-size:12.5px; color:#8A6C2D;
+  }
+  .market-tag::before{
+    content:''; position:absolute; left:5px; top:50%; width:6px; height:6px; margin-top:-3px;
+    border-radius:50%; background:var(--bg); border:1.5px dashed var(--accent);
+  }
+
+  /* ---------- filters ---------- */
+  .search-hero{background:linear-gradient(180deg,#FFF3E7,var(--bg)); padding:50px 0 20px;}
+  .search-bar{
+    background:#fff; border-radius:20px; box-shadow:var(--shadow); padding:10px; display:flex; gap:10px;
+    border:1px solid var(--border);
+  }
+  .search-bar input{
+    flex:1; border:none; outline:none; padding:14px 18px; font-size:16px; font-family:inherit; background:transparent;
+  }
+  .filter-row{display:flex; gap:10px; flex-wrap:wrap; margin:20px 0 6px;}
+  .filter-chip{
+    padding:10px 16px; border-radius:999px; border:2px solid var(--border); background:#fff; font-weight:700; font-size:13.5px;
+    color:var(--text-soft); display:flex; align-items:center; gap:6px; transition:all .15s ease;
+  }
+  .filter-chip:hover{border-color:var(--secondary);}
+  .filter-chip.on{background:var(--secondary); color:#fff; border-color:var(--secondary);}
+  .results-head{display:flex; align-items:center; justify-content:space-between; margin:30px 0 18px; flex-wrap:wrap; gap:12px;}
+
+  .split{display:grid; grid-template-columns:1.5fr 1fr; gap:26px; align-items:start;}
+  .map-preview{
+    background:linear-gradient(135deg,#EFEAE0,#E4DDCF); border-radius:20px; height:520px; position:sticky; top:90px;
+    border:1px solid var(--border); overflow:hidden; position:relative;
+  }
+
+  /* ---------- event detail ---------- */
+  .cover{
+    height:340px; border-radius:24px; overflow:hidden; position:relative; margin-bottom:-60px;
+  }
+  .cover .ph{height:100%;}
+  .cover-fade{position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.55) 100%);}
+  .detail-card{
+    background:#fff; border-radius:24px; box-shadow:var(--shadow); padding:30px; margin:0 20px; position:relative; z-index:2;
+    border:1px solid var(--border);
+  }
+  .detail-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
+  .organizer-row{display:flex; align-items:center; gap:12px; margin-top:14px;}
+  .organizer-row .avatar-btn{width:44px;height:44px;}
+  .info-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:26px 0;}
+  .info-box{background:#FBF8F3; border-radius:14px; padding:16px; text-align:center; border:1px solid var(--border);}
+  .info-box b{display:block; font-size:19px; margin-bottom:2px;}
+  .info-box span{font-size:12px; color:var(--text-soft); font-weight:700;}
+  .amenities{display:flex; flex-wrap:wrap; gap:10px; margin:14px 0;}
+  .amenity{
+    display:flex; align-items:center; gap:6px; background:#F2F7F0; color:#4E6B49; padding:8px 14px; border-radius:999px;
+    font-weight:700; font-size:13px;
+  }
+  .gallery{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0;}
+  .gallery .ph{height:110px; border-radius:12px;}
+
+  .review-card{
+    border:1px solid var(--border); border-radius:16px; padding:18px 20px; margin-bottom:14px; background:#FEFDFB;
+  }
+  .review-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .review-sub{display:flex; gap:16px; flex-wrap:wrap; margin:10px 0; font-size:12.5px; color:var(--text-soft);}
+  .review-sub b{color:var(--text);}
+  .stars{color:var(--accent); letter-spacing:2px;}
+
+  /* ---------- community ---------- */
+  .post-card{
+    background:#fff; border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:var(--shadow);
+  }
+  .post-head{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+  .post-head .name{font-weight:800; font-size:15px;}
+  .post-head .meta{font-size:12.5px; color:var(--text-soft);}
+  .post-body{font-size:15px; line-height:1.55; margin-bottom:12px;}
+  .post-photo{height:200px; border-radius:14px; margin-bottom:12px;}
+  .post-actions{display:flex; gap:6px; border-top:1px solid var(--border); padding-top:10px;}
+  .post-action{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:7px; padding:8px; border-radius:10px;
+    font-weight:700; font-size:13.5px; color:var(--text-soft); background:transparent; border:none;
+  }
+  .post-action:hover{background:#F6F3EC; color:var(--text);}
+  .post-action.liked{color:var(--primary);}
+  .side-card{background:#fff; border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .side-card h4{font-size:15px; margin-bottom:14px;}
+  .mini-row{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+  .mini-row .name{font-weight:700; font-size:13.5px;}
+  .mini-row .sub{font-size:11.5px; color:var(--text-soft);}
+  .composer{background:#fff; border:1px solid var(--border); border-radius:20px; padding:18px 20px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .composer textarea{
+    width:100%; border:none; resize:none; font-family:inherit; font-size:15px; outline:none; min-height:50px; background:transparent;
+  }
+
+  /* ---------- profile ---------- */
+  .profile-cover{height:150px; border-radius:24px 24px 0 0;}
+  .profile-header{
+    background:#fff; border:1px solid var(--border); border-radius:0 0 24px 24px; padding:0 30px 26px; margin-bottom:26px;
+    box-shadow:var(--shadow);
+  }
+  .profile-logo{
+    width:96px; height:96px; border-radius:20px; border:5px solid #fff; margin-top:-48px; box-shadow:var(--shadow);
+  }
+  .profile-top{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;}
+  .profile-tags{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;}
+  .stat-strip{display:flex; gap:30px; margin-top:16px; flex-wrap:wrap;}
+  .stat-strip div b{font-size:20px; display:block;}
+  .stat-strip div span{font-size:12.5px; color:var(--text-soft); font-weight:700;}
+  .tabs{display:flex; gap:6px; border-bottom:2px solid var(--border); margin-bottom:24px;}
+  .tab{padding:12px 4px; margin-right:22px; font-weight:800; color:var(--text-soft); border-bottom:3px solid transparent; position:relative; top:2px;}
+  .tab.active{color:var(--primary); border-color:var(--primary);}
+
+  /* ---------- organizer dashboard ---------- */
+  .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:30px;}
+  .kpi{background:#fff; border:1px solid var(--border); border-radius:18px; padding:20px; box-shadow:var(--shadow);}
+  .kpi span{font-size:13px; color:var(--text-soft); font-weight:700;}
+  .kpi b{font-size:26px; display:block; margin:6px 0 2px;}
+  .kpi .trend{font-size:12.5px; font-weight:800;}
+  .trend.up{color:var(--success);}
+  .bars{display:flex; align-items:flex-end; gap:10px; height:150px; margin-top:16px;}
+  .bar{flex:1; background:linear-gradient(180deg,var(--accent),var(--primary)); border-radius:8px 8px 0 0; position:relative;}
+  .bar span{position:absolute; bottom:-22px; left:0; right:0; text-align:center; font-size:11px; color:var(--text-soft); font-weight:700;}
+  .table-row{
+    display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--border); gap:12px;
+  }
+  .table-row:last-child{border:none;}
+  .pill-status{padding:5px 12px; border-radius:999px; font-size:12px; font-weight:800;}
+  .pill-status.pending{background:#FFF3D9; color:#8A6C2D;}
+  .pill-status.approved{background:#E7F1E5; color:#4E6B49;}
+  .pill-status.waitlist{background:#F1EAE0; color:#6B6560;}
+
+  /* ---------- map ---------- */
+  .map-wrap{
+    background:linear-gradient(135deg,#EFEAE0,#E7E0D2); border-radius:28px; height:560px; position:relative; overflow:hidden;
+    border:1px solid var(--border); box-shadow:var(--shadow);
+  }
+  .map-road{position:absolute; background:#fff; opacity:.5;}
+  .pin{
+    position:absolute; width:38px; height:38px; border-radius:50% 50% 50% 0; background:var(--primary); transform:rotate(-45deg);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(199,106,74,0.4); border:3px solid #fff;
+    transition:transform .15s ease;
+  }
+  .pin span{transform:rotate(45deg); font-size:14px;}
+  .pin:hover{transform:rotate(-45deg) scale(1.15);}
+  .pin.cluster{background:var(--secondary); box-shadow:0 4px 10px rgba(147,163,140,0.4);}
+  .map-popup{
+    position:absolute; width:230px; background:#fff; border-radius:16px; box-shadow:var(--shadow-hover); overflow:hidden; z-index:20;
+    border:1px solid var(--border);
+  }
+  .map-popup .ph{height:100px;}
+  .map-popup-body{padding:12px 14px;}
+
+  /* ---------- gather AI ---------- */
+  .ai-fab{
+    position:fixed; bottom:26px; right:26px; z-index:200; background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:#fff; padding:15px 22px; border-radius:999px; border:none; font-weight:800; font-size:15px; box-shadow:0 10px 26px rgba(199,106,74,.35);
+    display:flex; align-items:center; gap:9px;
+  }
+  .ai-panel{
+    position:fixed; bottom:96px; right:26px; width:360px; max-height:70vh; background:#fff; border-radius:22px; box-shadow:var(--shadow-hover);
+    z-index:200; display:none; flex-direction:column; overflow:hidden; border:1px solid var(--border);
+  }
+  .ai-panel.open{display:flex;}
+  .ai-head{background:linear-gradient(135deg,var(--primary),#DE8C63); color:#fff; padding:18px 20px;}
+  .ai-body{padding:16px 18px; overflow-y:auto;}
+  .ai-msg{background:#FBF8F3; border-radius:14px; padding:14px 16px; font-size:14px; line-height:1.5; margin-bottom:12px; border:1px solid var(--border);}
+  .ai-rec{border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:10px;}
+  .ai-rec b{font-size:14px;}
+  .ai-rec p{font-size:13px; color:var(--text-soft); margin:6px 0 0; line-height:1.5;}
+
+  /* ---------- success stories ---------- */
+  .story-card{
+    background:#fff; border:1px solid var(--border); border-radius:22px; padding:26px; box-shadow:var(--shadow); position:relative;
+  }
+  .story-quote{font-size:16.5px; font-style:italic; line-height:1.55; margin:14px 0;}
+  .story-foot{display:flex; align-items:center; gap:12px;}
+
+  /* ---------- footer ---------- */
+  footer{background:#2D2D2D; color:#EDE6DA; padding:50px 0 26px; margin-top:40px;}
+  .foot-grid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:30px; margin-bottom:30px;}
+  footer h4{color:#fff; font-size:14px; margin-bottom:14px;}
+  footer a{display:block; color:#B8B2A8; font-size:14px; margin-bottom:10px;}
+  footer a:hover{color:#fff;}
+  .foot-bottom{border-top:1px solid #46433f; padding-top:20px; font-size:13px; color:#918C84; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed; top:90px; left:50%; transform:translateX(-50%) translateY(-20px); background:var(--text); color:#fff;
+    padding:12px 22px; border-radius:999px; font-weight:700; font-size:14px; z-index:300; opacity:0; pointer-events:none;
+    transition:all .3s ease; box-shadow:var(--shadow-hover);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  @media (max-width:960px){
+    .nav-links{display:none;}
+    .mobile-toggle{display:block;}
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-visual{display:none;}
+    .grid-3,.grid-2,.split,.info-grid,.kpi-grid,.foot-grid,.stats-bar,.gallery{grid-template-columns:repeat(2,1fr);}
+    .info-grid{grid-template-columns:repeat(2,1fr);}
+    .ai-panel{width:92vw; right:4vw;}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================= SAMPLE DATA ============================= */
+const EVENTS = [
+  {id:1, name:"Katy Farmers Market", organizer:"Houston Community Markets", date:"Sat, Aug 2", distance:"3.2 mi", fee:"$45", attendance:"1,200+ expected", rating:4.8, category:"Farmers Market", indoor:false, weekend:true, electricity:true, family:true, color:"terr", emoji:"🥕",
+    desc:"A beloved neighborhood staple, Katy Farmers Market brings together growers, makers, and food vendors every Saturday morning under the oak trees at Katy Green.",
+    amenities:["Electricity","Free Parking","Tent Required","Outdoor"],
+    demo:"Mostly families and retirees, ages 30–65, shopping for weekend groceries and gifts.",
+    weather:"Sunny, mid-80s on average for August Saturdays.",
+    pastAttendance:[{y:2023,n:980},{y:2024,n:1120},{y:2025,n:1250}],
+    reviews:[
+      {biz:"Glimmer by Av", overall:5, comm:5, traffic:5, sales:4, org:5, again:true, text:"The organizers communicated incredibly well and foot traffic stayed steady all day."},
+      {biz:"Sweet Crumbs Bakery", overall:4, comm:4, traffic:5, sales:4, org:4, again:true, text:"My best holiday market last year. Sold out by 1pm!"},
+      {biz:"Cedar & Clay Pottery", overall:3, comm:4, traffic:3, sales:3, org:4, again:true, text:"Beautiful venue but attendance was lower than expected on a rainy weekend."}
+    ]},
+  {id:2, name:"Heights Holiday Market", organizer:"Heights Merchant Collective", date:"Sun, Dec 14", distance:"6.8 mi", fee:"$60", attendance:"2,000+ expected", rating:4.6, category:"Holiday Market", indoor:true, weekend:true, electricity:true, family:true, color:"mustard", emoji:"🎄",
+    desc:"A cozy indoor holiday market featuring local gift makers, hot cocoa, and live carolers. One of the highest-attended events of the season.",
+    amenities:["Electricity","Indoor","Free Parking","Family Friendly"],
+    demo:"Gift shoppers and families, ages 25–55, strong holiday spending.",
+    weather:"Indoor venue, climate controlled year round.",
+    pastAttendance:[{y:2022,n:1500},{y:2023,n:1750},{y:2024,n:2050}],
+    reviews:[
+      {biz:"Wildflower Boutique", overall:5, comm:5, traffic:5, sales:5, org:5, again:true, text:"Best sales day of my entire year, every single time."},
+      {biz:"Rise Coffee Roasters", overall:4, comm:4, traffic:4, sales:4, org:5, again:true, text:"Well run and the crowd was ready to spend."}
+    ]},
+  {id:3, name:"Rice Village Craft Fair", organizer:"Village Arts Alliance", date:"Sat, Sep 6", distance:"4.1 mi", fee:"$35", attendance:"800+ expected", rating:4.3, category:"Craft Fair", indoor:false, weekend:true, electricity:false, family:true, color:"sage", emoji:"🎨",
+    desc:"A relaxed outdoor fair spotlighting handmade goods from painters, potters, and jewelry makers along the Village walkways.",
+    amenities:["Outdoor","Shade Provided","Family Friendly"],
+    demo:"Students, young professionals, and art collectors, ages 20–40.",
+    weather:"Warm and dry in September, light breeze in the afternoons.",
+    pastAttendance:[{y:2023,n:620},{y:2024,n:710},{y:2025,n:790}],
+    reviews:[
+      {biz:"Cedar & Clay Pottery", overall:4, comm:4, traffic:4, sales:4, org:4, again:true, text:"Great crowd for handmade goods, will be back next year."}
+    ]},
+  {id:4, name:"Montrose Night Market", organizer:"Montrose Night Collective", date:"Fri, Aug 22", distance:"5.5 mi", fee:"$50", attendance:"1,500+ expected", rating:4.5, category:"Night Market", indoor:false, weekend:false, electricity:true, family:false, color:"terr", emoji:"🌙",
+    desc:"An evening market with string lights, food trucks, and live music. Popular with the after-work crowd.",
+    amenities:["Electricity","Outdoor","Food Trucks Welcome"],
+    demo:"Young professionals, ages 22–38, evening foot traffic after 6pm.",
+    weather:"Pleasant evenings, occasional humidity in late summer.",
+    pastAttendance:[{y:2024,n:1300},{y:2025,n:1480}],
+    reviews:[
+      {biz:"Sweet Crumbs Bakery", overall:5, comm:5, traffic:4, sales:5, org:4, again:true, text:"Evening crowd loves sweets after dinner, sales were fantastic."},
+      {biz:"Bloom & Co", overall:4, comm:4, traffic:4, sales:3, org:4, again:true, text:"Lovely atmosphere, flowers don't always fit the night crowd but still solid."}
+    ]},
+  {id:5, name:"Sugar Land Spring Market", organizer:"Sugar Land Parks Dept.", date:"Sat, Mar 21", distance:"14 mi", fee:"$40", attendance:"1,000+ expected", rating:4.7, category:"Farmers Market", indoor:false, weekend:true, electricity:true, family:true, color:"mustard", emoji:"🌷",
+    desc:"A bright spring market known for its flower vendors, plant sales, and family activities on the town green.",
+    amenities:["Electricity","Free Parking","Family Friendly","Outdoor"],
+    demo:"Families with young kids, gardeners, ages 30–50.",
+    weather:"Mild spring weather, occasional light rain.",
+    pastAttendance:[{y:2024,n:880},{y:2025,n:960}],
+    reviews:[
+      {biz:"Bloom & Co", overall:5, comm:5, traffic:5, sales:5, org:5, again:true, text:"Our flowers absolutely fly off the table here every spring."}
+    ]},
+  {id:6, name:"The Woodlands Artisan Fair", organizer:"Woodlands Arts Guild", date:"Sun, Oct 12", distance:"22 mi", fee:"$55", attendance:"1,800+ expected", rating:4.4, category:"Craft Fair", indoor:true, weekend:true, electricity:true, family:true, color:"sage", emoji:"🏺",
+    desc:"A well-organized indoor fair with a strong reputation among boutique and jewelry vendors.",
+    amenities:["Indoor","Electricity","Free Parking"],
+    demo:"Boutique shoppers, ages 28–55, higher average spend per visit.",
+    weather:"Indoor venue, no weather concerns.",
+    pastAttendance:[{y:2023,n:1550},{y:2024,n:1690},{y:2025,n:1790}],
+    reviews:[
+      {biz:"Wildflower Boutique", overall:4, comm:4, traffic:4, sales:4, org:5, again:true, text:"Consistent, well organized, and the crowd knows how to shop."},
+      {biz:"Glimmer by Av", overall:5, comm:5, traffic:4, sales:5, org:5, again:true, text:"Jewelry sold better here than anywhere else I've set up this year."}
+    ]}
+];
+
+const POSTS = [
+  {biz:"Wildflower Boutique", time:"2h ago", text:"Looking for vendor events next month, prefer weekends within 15 miles. Anyone have recommendations for boutique-friendly markets?", likes:14, comments:6, photo:false, color:"terr"},
+  {biz:"Rise Coffee Roasters", time:"5h ago", text:"Has anyone done Katy Night Market? Trying to decide if it's worth the booth fee for a coffee cart.", likes:9, comments:11, photo:false, color:"mustard"},
+  {biz:"Cedar & Clay Pottery", time:"1d ago", text:"Set up at Rice Village Craft Fair this weekend, so grateful for this community. Here's my booth!", likes:31, comments:8, photo:true, color:"sage"},
+  {biz:"Glimmer by Av", time:"2d ago", text:"Anyone need a jewelry vendor for a upcoming holiday event? I have December weekends open and a full display setup ready to go.", likes:18, comments:4, photo:false, color:"terr"}
+];
+
+const BUSINESSES = {
+  "Glimmer by Av": {category:"Jewelry", followers:412, events:14, rating:4.8, about:"Handmade wire-wrapped jewelry inspired by Texas wildflowers, made one piece at a time.", color:"terr", emoji:"💍"},
+  "Sweet Crumbs Bakery": {category:"Baked Goods", followers:598, events:22, rating:4.7, about:"Small-batch sourdough, seasonal pies, and market-famous cinnamon rolls.", color:"mustard", emoji:"🥐"},
+  "Wildflower Boutique": {category:"Boutique", followers:730, events:19, rating:4.6, about:"Curated women's clothing and accessories from small American makers.", color:"terr", emoji:"👗"},
+  "Cedar & Clay Pottery": {category:"Pottery", followers:265, events:11, rating:4.4, about:"Wheel-thrown stoneware, glazed in small batches inspired by the Gulf Coast.", color:"sage", emoji:"🏺"},
+  "Bloom & Co": {category:"Florals", followers:340, events:16, rating:4.7, about:"Seasonal bouquets and dried arrangements grown on a family flower farm.", color:"sage", emoji:"🌸"},
+  "Rise Coffee Roasters": {category:"Coffee", followers:451, events:20, rating:4.5, about:"Small-batch roaster serving pour over and cold brew from a converted trailer.", color:"mustard", emoji:"☕"}
+};
+
+const APPLICATIONS = [
+  {biz:"Glimmer by Av", event:"Heights Holiday Market", status:"pending"},
+  {biz:"Cedar & Clay Pottery", event:"Heights Holiday Market", status:"approved"},
+  {biz:"Sweet Crumbs Bakery", event:"Heights Holiday Market", status:"approved"},
+  {biz:"Rise Coffee Roasters", event:"Heights Holiday Market", status:"waitlist"},
+  {biz:"Wildflower Boutique", event:"Heights Holiday Market", status:"pending"}
+];
+
+/* ============================= STATE ============================= */
+const state = { view:"home", eventId:1, activeFilters:new Set(), profileTab:"about", aiOpen:false };
+
+/* ============================= HELPERS ============================= */
+function stars(n){ const full=Math.round(n); return "★".repeat(full)+"☆".repeat(5-full); }
+function ph(color, emoji, extraStyle=""){ return `<div class="ph ${color}" style="${extraStyle}">${emoji}</div>`; }
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(window._toastTimer); window._toastTimer=setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function go(view, extra){
+  state.view = view;
+  if(extra && extra.eventId) state.eventId = extra.eventId;
+  if(extra && extra.biz) state.biz = extra.biz;
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.go = go; window.toast = toast;
+
+/* ============================= NAV ============================= */
+function navHTML(){
+  const links = [
+    {id:"home", label:"Home", icon:"🏠"},
+    {id:"search", label:"Find Events", icon:"🔎"},
+    {id:"community", label:"Community", icon:"💬"},
+    {id:"map", label:"Map", icon:"🗺️"},
+    {id:"organizer", label:"For Organizers", icon:"📋"},
+  ];
+  return `
+  <div class="navbar">
+    <div class="nav-inner">
+      <a class="brand" href="javascript:void(0)" onclick="go('home')">
+        <span class="brand-mark">🧺</span> Gather
+      </a>
+      <div class="nav-links">
+        ${links.map(l=>`<button class="nav-link ${state.view===l.id?'active':''}" onclick="go('${l.id}')">${l.icon} ${l.label}</button>`).join('')}
+      </div>
+      <div class="nav-right">
+        <button class="nav-link" onclick="go('profile',{biz:'Wildflower Boutique'})" style="display:flex">👋 My Profile</button>
+        <div class="avatar-btn">WB</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ============================= HOME VIEW ============================= */
+function homeView(){
+  const featured = EVENTS.slice(0,3);
+  return `
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge">🧡 Trusted by 12,000+ local businesses</div>
+        <h1>Where Local<br>Businesses <span class="script">Gather</span></h1>
+        <p>Helping small businesses discover great events, connect with organizers, and grow through community.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="go('search')">Find Events</button>
+          <button class="btn btn-secondary" onclick="go('community')">Explore the Community</button>
+        </div>
+        <div class="hero-trust">
+          <div><b>12,000+</b>Local Businesses</div>
+          <div><b>850+</b>Markets Listed</div>
+          <div><b>95%</b>Would Attend Again</div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="stall stall-1">${ph("terr","🍯")}</div>
+        <div class="stall stall-2">${ph("sage","🌻")}</div>
+        <div class="stall stall-3">${ph("mustard","💍")}</div>
+        <div class="float-chip chip-1">⭐ 4.8 rating</div>
+        <div class="float-chip chip-2">📈 +32% sales</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Happening near you</div>
+        <h2>Upcoming Markets</h2>
+        <p>A handful of well-reviewed events other vendors are excited about this month.</p>
+      </div>
+      <div class="grid grid-3">
+        ${featured.map(eventCard).join('')}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="stats-bar">
+        <div><b>12,000+</b><span>Local Businesses</span></div>
+        <div><b>850+</b><span>Markets Listed</span></div>
+        <div><b>95%</b><span>Would Attend Again</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Real growth</div>
+        <h2>Success Stories</h2>
+        <p>The goal isn't just finding events, it's growing your business.</p>
+      </div>
+      <div class="grid grid-2">
+        ${storyCard("Glimmer by Av","Jewelry","Found through Gather",5,"One recommendation turned into my highest-performing market of the year.","terr","💍")}
+        ${storyCard("Sweet Crumbs Bakery","Baked Goods","Discovered three recurring markets using Gather",5,"I went from one market a month to a full weekend calendar, and my regulars follow me between them now.","mustard","🥐")}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="side-card" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; padding:30px;">
+        <div>
+          <h3 style="font-size:22px; margin-bottom:8px;">Not sure where to start?</h3>
+          <p style="color:var(--text-soft); margin:0;">Gather AI can recommend events based on your category, past success, and audience.</p>
+        </div>
+        <button class="btn btn-primary" onclick="toggleAI(true)">Ask Gather AI ✨</button>
+      </div>
+    </div>
+  </section>
+  `;
+}
+
+function eventCard(e){
+  return `
+  <div class="card" onclick="go('event',{eventId:${e.id}})">
+    <div class="card-img">
+      ${ph(e.color, e.emoji)}
+      <div class="badge">${e.category}</div>
+      <button class="fav-btn" onclick="event.stopPropagation(); toast('Saved to your favorites 💛')">♡</button>
+    </div>
+    <div class="card-body">
+      <h3>${e.name}</h3>
+      <div class="card-meta">📅 ${e.date} · 📍 ${e.distance}</div>
+      <div class="card-stats">
+        <span class="rating">★ ${e.rating}</span>
+        <span>👥 ${e.attendance}</span>
+      </div>
+      <div class="card-foot">
+        <span class="fee-pill">${e.fee} booth fee</span>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); toast('Application started for ${e.name}!')">Apply</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function storyCard(name,cat,tag,rating,quote,color,emoji){
+  return `
+  <div class="story-card">
+    <span class="market-tag">${tag}</span>
+    <p class="story-quote">"${quote}"</p>
+    <div class="story-foot">
+      <div class="avatar-btn" style="background:none;">${ph(color,emoji,"width:44px;height:44px;border-radius:12px;font-size:20px;")}</div>
+      <div>
+        <div style="font-weight:800;">${name}</div>
+        <div class="stars">${stars(rating)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ============================= SEARCH VIEW ============================= */
+const FILTER_OPTIONS = [
+  {id:"weekend", label:"🗓️ Weekend"},
+  {id:"weekday", label:"📆 Weekday"},
+  {id:"indoor", label:"🏠 Indoor"},
+  {id:"outdoor", label:"🌤️ Outdoor"},
+  {id:"electricity", label:"🔌 Electricity"},
+  {id:"family", label:"👨‍👩‍👧 Family Friendly"},
+];
+function toggleFilter(id){
+  if(state.activeFilters.has(id)) state.activeFilters.delete(id); else state.activeFilters.add(id);
+  render();
+}
+function matchesFilters(e){
+  for(const f of state.activeFilters){
+    if(f==="weekend" && !e.weekend) return false;
+    if(f==="weekday" && e.weekend) return false;
+    if(f==="indoor" && !e.indoor) return false;
+    if(f==="outdoor" && e.indoor) return false;
+    if(f==="electricity" && !e.electricity) return false;
+    if(f==="family" && !e.family) return false;
+  }
+  return true;
+}
+function searchView(){
+  const results = EVENTS.filter(matchesFilters);
+  return `
+  <section class="search-hero">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Find events</div>
+        <h2>What kind of market are you looking for?</h2>
+        <p>Filter by what matters to your business, no guesswork required.</p>
+      </div>
+      <div class="search-bar">
+        <input placeholder="Try 'weekend farmers market near me'" />
+        <button class="btn btn-primary" onclick="toast('Showing best matches below')">Search</button>
+      </div>
+      <div class="filter-row">
+        ${FILTER_OPTIONS.map(f=>`<button class="filter-chip ${state.activeFilters.has(f.id)?'on':''}" onclick="toggleFilter('${f.id}')">${f.label}</button>`).join('')}
+      </div>
+    </div>
+  </section>
+  <section class="section-tight">
+    <div class="container">
+      <div class="split">
+        <div>
+          <div class="results-head">
+            <h3 style="font-size:20px;">${results.length} events match your search</h3>
+          </div>
+          <div class="grid grid-2">
+            ${results.map(eventCard).join('') || `<p style="color:var(--text-soft)">No events match those filters yet. Try removing one.</p>`}
+          </div>
+        </div>
+        <div class="map-preview">
+          ${miniMapPins(results)}
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+}
+function miniMapPins(events){
+  const positions = [[20,30],[55,20],[35,55],[70,60],[15,70],[80,35]];
+  return events.map((e,i)=>{
+    const [top,left] = positions[i%positions.length];
+    return `<div class="pin" style="top:${top}%; left:${left}%;" onclick="go('event',{eventId:${e.id}})" title="${e.name}"><span>${e.emoji}</span></div>`;
+  }).join('');
+}
+
+/* ============================= EVENT DETAIL VIEW ============================= */
+function eventView(){
+  const e = EVENTS.find(x=>x.id===state.eventId) || EVENTS[0];
+  const avgSales = "$800–$1,500";
+  const wouldAgain = Math.round(e.reviews.filter(r=>r.again).length/e.reviews.length*100);
+  return `
+  <div class="cover">${ph(e.color, e.emoji, "height:100%;font-size:80px;")}<div class="cover-fade"></div></div>
+  <div class="container">
+    <div class="detail-card">
+      <div class="detail-top">
+        <div>
+          <span class="badge tag" style="position:static;">${e.category}</span>
+          <h2 style="font-size:30px; margin-top:10px;">${e.name}</h2>
+          <div class="organizer-row">
+            <div class="avatar-btn" style="background:var(--secondary);">${e.organizer.slice(0,2).toUpperCase()}</div>
+            <div>
+              <div style="font-weight:800; font-size:14.5px;">${e.organizer}</div>
+              <div style="font-size:12.5px; color:var(--text-soft);">Organizer · Responds within a day</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:26px; font-weight:800;">${e.fee}</div>
+          <div style="color:var(--text-soft); font-size:13px; margin-bottom:12px;">booth fee</div>
+          <button class="btn btn-primary" onclick="toast('Application sent to ${e.organizer}!')">Apply to Vendor</button>
+        </div>
+      </div>
+
+      <p style="margin:22px 0; color:var(--text-soft); line-height:1.6; font-size:15.5px;">${e.desc}</p>
+
+      <div class="info-grid">
+        <div class="info-box"><b>${e.date}</b><span>DATE</span></div>
+        <div class="info-box"><b>${e.attendance}</b><span>EXPECTED TURNOUT</span></div>
+        <div class="info-box"><b>★ ${e.rating}</b><span>VENDOR RATING</span></div>
+        <div class="info-box"><b>${wouldAgain}%</b><span>WOULD ATTEND AGAIN</span></div>
+      </div>
+
+      <h3 style="font-size:18px; margin-bottom:10px;">Amenities</h3>
+      <div class="amenities">${e.amenities.map(a=>`<span class="amenity">✓ ${a}</span>`).join('')}</div>
+
+      <div class="grid grid-2" style="margin:24px 0;">
+        <div class="side-card" style="margin:0;">
+          <h4>👥 Expected Customer Demographics</h4>
+          <p style="color:var(--text-soft); font-size:14px; line-height:1.55;">${e.demo}</p>
+        </div>
+        <div class="side-card" style="margin:0;">
+          <h4>☀️ Weather History</h4>
+          <p style="color:var(--text-soft); font-size:14px; line-height:1.55;">${e.weather}</p>
+        </div>
+      </div>
+
+      <h3 style="font-size:18px; margin-bottom:10px;">Previous Years' Attendance</h3>
+      <div class="bars" style="margin-bottom:34px;">
+        ${e.pastAttendance.map(p=>{
+          const max = Math.max(...e.pastAttendance.map(x=>x.n));
+          const h = Math.round(p.n/max*100);
+          return `<div class="bar" style="height:${h}%;"><span>${p.y}</span></div>`;
+        }).join('')}
+      </div>
+
+      <h3 style="font-size:18px; margin-bottom:10px;">Photo Gallery</h3>
+      <div class="gallery">
+        ${["terr","sage","mustard","terr"].map((c,i)=>ph(c, ["📷","🧺","🎪","🖼️"][i])).join('')}
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; margin:30px 0 14px;">
+        <h3 style="font-size:18px;">Vendor Reviews</h3>
+        <span class="market-tag">Businesses reviewing events, not customers</span>
+      </div>
+      <div class="grid grid-2" style="margin-bottom:20px;">
+        <div class="info-box"><b>${avgSales}</b><span>AVG SALES RANGE</span></div>
+        <div class="info-box"><b>${wouldAgain}%</b><span>WOULD ATTEND AGAIN</span></div>
+      </div>
+      ${e.reviews.map(reviewCard).join('')}
+
+      <div style="text-align:center; margin-top:26px;">
+        <button class="btn btn-primary" onclick="toast('Application sent to ${e.organizer}!')">Apply to Vendor at ${e.name}</button>
+      </div>
+    </div>
+  </div>
+  `;
+}
+function reviewCard(r){
+  return `
+  <div class="review-card">
+    <div class="review-head">
+      <div style="font-weight:800;">${r.biz}</div>
+      <div class="stars">${stars(r.overall)}</div>
+    </div>
+    <p style="margin:6px 0; font-size:14.5px; line-height:1.5;">"${r.text}"</p>
+    <div class="review-sub">
+      <span>Communication <b>${r.comm}/5</b></span>
+      <span>Foot Traffic <b>${r.traffic}/5</b></span>
+      <span>Sales Experience <b>${r.sales}/5</b></span>
+      <span>Organization <b>${r.org}/5</b></span>
+      <span>Would Attend Again <b>${r.again? "Yes":"No"}</b></span>
+    </div>
+  </div>`;
+}
+
+/* ============================= COMMUNITY VIEW ============================= */
+function communityView(){
+  return `
+  <section class="section-tight">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Community</div>
+        <h2>Ask the Community</h2>
+        <p>Friendly discussion between local businesses, questions, tips, and recommendations.</p>
+      </div>
+      <div class="split">
+        <div>
+          <div class="composer">
+            <textarea placeholder="Share something with the community..."></textarea>
+            <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+              <button class="btn btn-primary btn-sm" onclick="toast('Post shared with the community!')">Post</button>
+            </div>
+          </div>
+          ${POSTS.map(postCard).join('')}
+        </div>
+        <div>
+          <div class="side-card">
+            <h4>🌟 Active Businesses</h4>
+            ${Object.entries(BUSINESSES).slice(0,4).map(([name,b])=>`
+              <div class="mini-row" style="cursor:pointer;" onclick="go('profile',{biz:'${name}'})">
+                <div class="avatar-btn" style="background:none;">${ph(b.color,b.emoji,"width:38px;height:38px;border-radius:10px;font-size:17px;")}</div>
+                <div><div class="name">${name}</div><div class="sub">${b.category} · ★ ${b.rating}</div></div>
+              </div>`).join('')}
+          </div>
+          <div class="side-card">
+            <h4>📌 Trending Topics</h4>
+            <div class="profile-tags">
+              <span class="market-tag">#HolidayMarkets</span>
+              <span class="market-tag">#FirstTimeVendor</span>
+              <span class="market-tag">#BoothSetup</span>
+              <span class="market-tag">#RainPlan</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+}
+function postCard(p, idx){
+  const b = BUSINESSES[p.biz];
+  return `
+  <div class="post-card">
+    <div class="post-head">
+      <div class="avatar-btn" style="background:none;">${ph(b.color,b.emoji,"width:44px;height:44px;border-radius:12px;font-size:19px;")}</div>
+      <div>
+        <div class="name" style="cursor:pointer;" onclick="go('profile',{biz:'${p.biz}'})">${p.biz}</div>
+        <div class="meta">${b.category} · ${p.time}</div>
+      </div>
+    </div>
+    <div class="post-body">${p.text}</div>
+    ${p.photo ? `<div class="post-photo">${ph(p.color,"🧺")}</div>` : ''}
+    <div class="post-actions">
+      <button class="post-action" onclick="this.classList.toggle('liked'); toast('Thanks for the support!')">👍 Like (${p.likes})</button>
+      <button class="post-action" onclick="toast('Comment box opened')">💬 Comment (${p.comments})</button>
+      <button class="post-action" onclick="toast('Saved to your list')">🔖 Save</button>
+      <button class="post-action" onclick="toast('Link copied to share')">↗ Share</button>
+    </div>
+  </div>`;
+}
+
+/* ============================= BUSINESS PROFILE VIEW ============================= */
+function profileView(){
+  const name = state.biz || "Wildflower Boutique";
+  const b = BUSINESSES[name];
+  const myPosts = POSTS.filter(p=>p.biz===name);
+  const myEvents = EVENTS.filter(e=>e.reviews.some(r=>r.biz===name));
+  return `
+  <div class="profile-cover">${ph(b.color,"", "height:100%;")}</div>
+  <div class="container">
+    <div class="profile-header">
+      <div class="profile-top">
+        <div style="display:flex; gap:18px; align-items:flex-end;">
+          <div class="profile-logo">${ph(b.color,b.emoji,"height:100%;width:100%;border-radius:15px;font-size:38px;")}</div>
+          <div>
+            <h2 style="font-size:26px;">${name}</h2>
+            <div style="color:var(--text-soft); font-weight:700; font-size:14px;">${b.category} · ★ ${b.rating} vendor rating</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-secondary btn-sm" onclick="toast('Now following ${name}')">+ Follow</button>
+          <button class="btn btn-primary btn-sm" onclick="toast('Message sent to ${name}')">Message</button>
+        </div>
+      </div>
+      <div class="profile-tags">
+        <span class="market-tag">${b.category}</span>
+        <span class="market-tag">Houston, TX</span>
+        <span class="market-tag">Est. Vendor</span>
+      </div>
+      <div class="stat-strip">
+        <div><b>${b.followers}</b><span>Followers</span></div>
+        <div><b>${b.events}</b><span>Events Attended</span></div>
+        <div><b>★ ${b.rating}</b><span>Reviews Received</span></div>
+        <div><b>${myEvents.length}</b><span>Favorite Markets</span></div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      ${["about","products","events","posts"].map(t=>`<button class="tab ${state.profileTab===t?'active':''}" onclick="state.profileTab='${t}'; render();">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}
+    </div>
+
+    ${state.profileTab==="about" ? `
+      <div class="grid grid-2">
+        <div class="side-card" style="margin:0;">
+          <h4>About</h4>
+          <p style="color:var(--text-soft); font-size:14.5px; line-height:1.6;">${b.about}</p>
+        </div>
+        <div class="side-card" style="margin:0;">
+          <h4>Contact</h4>
+          <p style="color:var(--text-soft); font-size:14.5px; line-height:1.9;">
+            📧 hello@${name.toLowerCase().replace(/[^a-z]/g,'')}.com<br>
+            📍 Based in Houston, TX<br>
+            🔗 Instagram · @${name.toLowerCase().replace(/[^a-z]/g,'')}
+          </p>
+        </div>
+      </div>` : ``}
+
+    ${state.profileTab==="products" ? `
+      <div class="grid grid-3">
+        ${["Signature Piece","Best Seller","New Arrival"].map((label,i)=>`
+          <div class="card" style="cursor:default;">
+            <div class="card-img">${ph(b.color,b.emoji)}<div class="badge">${label}</div></div>
+            <div class="card-body"><h3>${name} #${i+1}</h3><div class="card-meta">Handmade · Made to order</div></div>
+          </div>`).join('')}
+      </div>` : ``}
+
+    ${state.profileTab==="events" ? `
+      <div class="grid grid-2">${myEvents.length ? myEvents.map(eventCard).join('') : `<p style="color:var(--text-soft);">No events attended yet.</p>`}</div>` : ``}
+
+    ${state.profileTab==="posts" ? `
+      ${myPosts.length ? myPosts.map(postCard).join('') : `<p style="color:var(--text-soft);">No posts yet.</p>`}` : ``}
+  </div>
+  <div style="height:40px;"></div>
+  `;
+}
+
+/* ============================= ORGANIZER VIEW ============================= */
+function organizerView(){
+  return `
+  <section class="section-tight">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">For organizers</div>
+        <h2>Houston Community Markets Dashboard</h2>
+        <p>Manage applications, track revenue, and see how your events are performing, all in one friendly place.</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><span>Upcoming Events</span><b>4</b><span class="trend up">↑ 1 this month</span></div>
+        <div class="kpi"><span>Pending Applications</span><b>${APPLICATIONS.filter(a=>a.status==='pending').length}</b><span class="trend up">Needs review</span></div>
+        <div class="kpi"><span>Revenue This Month</span><b>$4,820</b><span class="trend up">↑ 18%</span></div>
+        <div class="kpi"><span>Avg Vendor Rating</span><b>★ 4.7</b><span class="trend up">↑ 0.2</span></div>
+      </div>
+
+      <div class="split">
+        <div>
+          <div class="side-card" style="margin-bottom:24px;">
+            <h4>Vendor Applications — Heights Holiday Market</h4>
+            ${APPLICATIONS.map(a=>`
+              <div class="table-row">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div class="avatar-btn" style="background:none;">${ph(BUSINESSES[a.biz].color, BUSINESSES[a.biz].emoji, "width:36px;height:36px;border-radius:10px;font-size:16px;")}</div>
+                  <div>
+                    <div style="font-weight:700; font-size:14px;">${a.biz}</div>
+                    <div style="font-size:12px; color:var(--text-soft);">${BUSINESSES[a.biz].category}</div>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span class="pill-status ${a.status}">${a.status}</span>
+                  ${a.status==='pending' ? `<button class="btn btn-primary btn-sm" onclick="toast('${a.biz} approved!')">Approve</button>` : ''}
+                </div>
+              </div>`).join('')}
+          </div>
+
+          <div class="side-card">
+            <h4>Upcoming Events</h4>
+            <div class="grid grid-2">${EVENTS.filter(e=>e.organizer==="Houston Community Markets").map(eventCard).join('')}</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="side-card">
+            <h4>📈 Applications by Week</h4>
+            <div class="bars" style="height:120px;">
+              ${[6,10,8,14,11].map((v,i)=>`<div class="bar" style="height:${v*7}%;"><span>W${i+1}</span></div>`).join('')}
+            </div>
+          </div>
+          <div class="side-card">
+            <h4>💬 Recent Messages</h4>
+            <div class="mini-row"><div class="avatar-btn" style="background:none;">${ph('terr','💍',"width:38px;height:38px;border-radius:10px;font-size:16px;")}</div><div><div class="name">Glimmer by Av</div><div class="sub">"Is electricity included at our both?"</div></div></div>
+            <div class="mini-row"><div class="avatar-btn" style="background:none;">${ph('mustard','🥐',"width:38px;height:38px;border-radius:10px;font-size:16px;")}</div><div><div class="name">Sweet Crumbs Bakery</div><div class="sub">"Confirming our booth number for Sunday"</div></div></div>
+            <button class="btn btn-secondary btn-block btn-sm" onclick="toast('Opening inbox')">View All Messages</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+}
+
+/* ============================= MAP VIEW ============================= */
+function mapView(){
+  const positions = [[18,22],[40,55],[62,15],[70,68],[25,75],[85,42]];
+  return `
+  <section class="section-tight">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Explore</div>
+        <h2>Map of Nearby Events</h2>
+        <p>Click a pin to preview an event. Zoom out and nearby markets cluster together.</p>
+      </div>
+      <div class="map-wrap" id="mapWrap">
+        ${EVENTS.map((e,i)=>{
+          const [top,left] = positions[i];
+          return `<div class="pin" style="top:${top}%; left:${left}%;" onclick="showMapPopup(event,${e.id})"><span>${e.emoji}</span></div>`;
+        }).join('')}
+        <div class="pin cluster" style="top:50%; left:88%;" onclick="toast('2 more events nearby, zoom in to see them')"><span>+2</span></div>
+        <div id="mapPopupHolder"></div>
+      </div>
+    </div>
+  </section>
+  `;
+}
+function showMapPopup(evt, id){
+  evt.stopPropagation();
+  const e = EVENTS.find(x=>x.id===id);
+  const holder = document.getElementById('mapPopupHolder');
+  const rect = evt.target.closest('.pin').getBoundingClientRect();
+  const wrapRect = document.getElementById('mapWrap').getBoundingClientRect();
+  const top = rect.top - wrapRect.top + 40;
+  const left = Math.min(rect.left - wrapRect.left, wrapRect.width - 240);
+  holder.innerHTML = `
+    <div class="map-popup" style="top:${top}px; left:${left}px;">
+      <div class="ph ${e.color}" style="height:100px; font-size:32px;">${e.emoji}</div>
+      <div class="map-popup-body">
+        <div style="font-weight:800; font-size:14.5px; margin-bottom:4px;">${e.name}</div>
+        <div style="font-size:12.5px; color:var(--text-soft); margin-bottom:8px;">📅 ${e.date} · 📍 ${e.distance}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="rating" style="font-size:13px;">★ ${e.rating}</span>
+          <span style="font-weight:800; font-size:13px;">${e.fee}</span>
+        </div>
+        <button class="btn btn-primary btn-sm btn-block" style="margin-top:10px;" onclick="go('event',{eventId:${e.id}})">View Details</button>
+      </div>
+    </div>`;
+}
+
+/* ============================= GATHER AI ============================= */
+function toggleAI(open){
+  state.aiOpen = open===undefined ? !state.aiOpen : open;
+  render();
+}
+window.toggleAI = toggleAI;
+window.showMapPopup = showMapPopup;
+window.toggleFilter = toggleFilter;
+
+function aiWidget(){
+  return `
+  <button class="ai-fab" onclick="toggleAI()">✨ Gather AI</button>
+  <div class="ai-panel ${state.aiOpen?'open':''}">
+    <div class="ai-head">
+      <div style="font-weight:800; font-size:16px; display:flex; justify-content:space-between; align-items:center;">
+        Gather AI
+        <button onclick="toggleAI(false)" style="background:none;border:none;color:#fff;font-size:18px;">✕</button>
+      </div>
+      <div style="font-size:12.5px; opacity:.9; margin-top:2px;">Personalized event recommendations</div>
+    </div>
+    <div class="ai-body">
+      <div class="ai-msg">Hi! Based on your category and past reviews, here's where we think you'd do well next:</div>
+      <div class="ai-rec">
+        <b>🥕 Katy Farmers Market</b>
+        <p>We think you'll perform well here because jewelry vendors averaged $1,250 in sales and gave this event a 4.8 rating.</p>
+        <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="toggleAI(false); go('event',{eventId:1})">View Event</button>
+      </div>
+      <div class="ai-rec">
+        <b>🏺 The Woodlands Artisan Fair</b>
+        <p>Boutique and jewelry vendors reported higher than average spend per visit, and the indoor venue removes weather risk.</p>
+        <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="toggleAI(false); go('event',{eventId:6})">View Event</button>
+      </div>
+      <div class="ai-msg">Want recommendations closer to a specific date or distance? Just ask below.</div>
+    </div>
+    <div style="padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:8px;">
+      <input placeholder="Ask Gather AI..." style="flex:1; border:1px solid var(--border); border-radius:999px; padding:10px 16px; font-family:inherit; outline:none;">
+      <button class="btn btn-primary btn-sm" onclick="toast('Gather AI is thinking...')">Send</button>
+    </div>
+  </div>`;
+}
+
+/* ============================= FOOTER ============================= */
+function footerHTML(){
+  return `
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div>
+          <div class="brand" style="color:#fff;"><span class="brand-mark">🧺</span> Gather</div>
+          <p style="color:#B8B2A8; font-size:14px; line-height:1.6; margin-top:14px; max-width:280px;">Helping local small businesses discover events, connect with organizers, and grow together.</p>
+        </div>
+        <div><h4>Discover</h4><a onclick="go('search')" href="javascript:void(0)">Find Events</a><a onclick="go('map')" href="javascript:void(0)">Map</a><a onclick="go('community')" href="javascript:void(0)">Community</a></div>
+        <div><h4>For Vendors</h4><a onclick="go('profile',{biz:'Wildflower Boutique'})" href="javascript:void(0)">My Profile</a><a href="javascript:void(0)" onclick="toast('Coming soon!')">Success Stories</a><a href="javascript:void(0)" onclick="toggleAI(true)">Gather AI</a></div>
+        <div><h4>For Organizers</h4><a onclick="go('organizer')" href="javascript:void(0)">Dashboard</a><a href="javascript:void(0)" onclick="toast('Coming soon!')">List an Event</a></div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Gather. Made for local businesses, everywhere.</span>
+        <span>A community that helps you grow 🌱</span>
+      </div>
+    </div>
+  </footer>`;
+}
+
+/* ============================= RENDER ============================= */
+function render(){
+  const views = {
+    home: homeView, search: searchView, event: eventView,
+    community: communityView, profile: profileView, organizer: organizerView, map: mapView
+  };
+  const body = views[state.view] ? views[state.view]() : homeView();
+  document.getElementById('app').innerHTML = `
+    ${navHTML()}
+    <div class="view active">${body}</div>
+    ${footerHTML()}
+    ${aiWidget()}
+  `;
+}
+render();
+</script>
+</body>
+</html>
