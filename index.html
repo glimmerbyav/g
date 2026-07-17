@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gather — Where Local Businesses Gather</title>
+<title>Mela — Where Local Businesses Gather</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -515,7 +515,7 @@ function navHTML(){
   <div class="navbar">
     <div class="nav-inner">
       <a class="brand" href="javascript:void(0)" onclick="go('home')">
-        <span class="brand-mark">🧺</span> Gather
+        <span class="brand-mark">🧺</span> Mela
       </a>
       <div class="nav-links">
         ${links.map(l=>`<button class="nav-link ${state.view===l.id?'active':''}" onclick="go('${l.id}')">${l.icon} ${l.label}</button>`).join('')}
@@ -536,7 +536,8 @@ function homeView(){
     <div class="container hero-grid">
       <div>
         <div class="hero-badge">🧡 Trusted by 12,000+ local businesses</div>
-        <h1>Where Local<br>Businesses <span class="script">Gather</span></h1>
+        <h1>Where Local<br>Businesses <span class="script">Mela</span></h1>
+        <div class="market-tag" style="margin-bottom:18px;">mela (meh-la) · a gathering, fair, or festival</div>
         <p>Helping small businesses discover great events, connect with organizers, and grow through community.</p>
         <div class="hero-actions">
           <button class="btn btn-primary" onclick="go('search')">Find Events</button>
@@ -589,8 +590,8 @@ function homeView(){
         <p>The goal isn't just finding events, it's growing your business.</p>
       </div>
       <div class="grid grid-2">
-        ${storyCard("Glimmer by Av","Jewelry","Found through Gather",5,"One recommendation turned into my highest-performing market of the year.","terr","💍")}
-        ${storyCard("Sweet Crumbs Bakery","Baked Goods","Discovered three recurring markets using Gather",5,"I went from one market a month to a full weekend calendar, and my regulars follow me between them now.","mustard","🥐")}
+        ${storyCard("Glimmer by Av","Jewelry","Found through Mela",5,"One recommendation turned into my highest-performing market of the year.","terr","💍")}
+        ${storyCard("Sweet Crumbs Bakery","Baked Goods","Discovered three recurring markets using Mela",5,"I went from one market a month to a full weekend calendar, and my regulars follow me between them now.","mustard","🥐")}
       </div>
     </div>
   </section>
@@ -600,9 +601,9 @@ function homeView(){
       <div class="side-card" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; padding:30px;">
         <div>
           <h3 style="font-size:22px; margin-bottom:8px;">Not sure where to start?</h3>
-          <p style="color:var(--text-soft); margin:0;">Gather AI can recommend events based on your category, past success, and audience.</p>
+          <p style="color:var(--text-soft); margin:0;">Mela AI can recommend events based on your category, past success, and audience.</p>
         </div>
-        <button class="btn btn-primary" onclick="toggleAI(true)">Ask Gather AI ✨</button>
+        <button class="btn btn-primary" onclick="toggleAI(true)">Ask Mela AI ✨</button>
       </div>
     </div>
   </section>
@@ -1079,11 +1080,11 @@ window.toggleFilter = toggleFilter;
 
 function aiWidget(){
   return `
-  <button class="ai-fab" onclick="toggleAI()">✨ Gather AI</button>
+  <button class="ai-fab" onclick="toggleAI()">✨ Mela AI</button>
   <div class="ai-panel ${state.aiOpen?'open':''}">
     <div class="ai-head">
       <div style="font-weight:800; font-size:16px; display:flex; justify-content:space-between; align-items:center;">
-        Gather AI
+        Mela AI
         <button onclick="toggleAI(false)" style="background:none;border:none;color:#fff;font-size:18px;">✕</button>
       </div>
       <div style="font-size:12.5px; opacity:.9; margin-top:2px;">Personalized event recommendations</div>
@@ -1103,8 +1104,8 @@ function aiWidget(){
       <div class="ai-msg">Want recommendations closer to a specific date or distance? Just ask below.</div>
     </div>
     <div style="padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:8px;">
-      <input placeholder="Ask Gather AI..." style="flex:1; border:1px solid var(--border); border-radius:999px; padding:10px 16px; font-family:inherit; outline:none;">
-      <button class="btn btn-primary btn-sm" onclick="toast('Gather AI is thinking...')">Send</button>
+      <input placeholder="Ask Mela AI..." style="flex:1; border:1px solid var(--border); border-radius:999px; padding:10px 16px; font-family:inherit; outline:none;">
+      <button class="btn btn-primary btn-sm" onclick="toast('Mela AI is thinking...')">Send</button>
     </div>
   </div>`;
 }
@@ -1116,15 +1117,15 @@ function footerHTML(){
     <div class="container">
       <div class="foot-grid">
         <div>
-          <div class="brand" style="color:#fff;"><span class="brand-mark">🧺</span> Gather</div>
+          <div class="brand" style="color:#fff;"><span class="brand-mark">🧺</span> Mela</div>
           <p style="color:#B8B2A8; font-size:14px; line-height:1.6; margin-top:14px; max-width:280px;">Helping local small businesses discover events, connect with organizers, and grow together.</p>
         </div>
         <div><h4>Discover</h4><a onclick="go('search')" href="javascript:void(0)">Find Events</a><a onclick="go('map')" href="javascript:void(0)">Map</a><a onclick="go('community')" href="javascript:void(0)">Community</a></div>
-        <div><h4>For Vendors</h4><a onclick="go('profile',{biz:'Wildflower Boutique'})" href="javascript:void(0)">My Profile</a><a href="javascript:void(0)" onclick="toast('Coming soon!')">Success Stories</a><a href="javascript:void(0)" onclick="toggleAI(true)">Gather AI</a></div>
+        <div><h4>For Vendors</h4><a onclick="go('profile',{biz:'Wildflower Boutique'})" href="javascript:void(0)">My Profile</a><a href="javascript:void(0)" onclick="toast('Coming soon!')">Success Stories</a><a href="javascript:void(0)" onclick="toggleAI(true)">Mela AI</a></div>
         <div><h4>For Organizers</h4><a onclick="go('organizer')" href="javascript:void(0)">Dashboard</a><a href="javascript:void(0)" onclick="toast('Coming soon!')">List an Event</a></div>
       </div>
       <div class="foot-bottom">
-        <span>© 2026 Gather. Made for local businesses, everywhere.</span>
+        <span>© 2026 Mela. Made for local businesses, everywhere.</span>
         <span>A community that helps you grow 🌱</span>
       </div>
     </div>
